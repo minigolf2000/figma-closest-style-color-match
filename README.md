@@ -1,0 +1,1 @@
+Will only try to match styles if its first paint type is 'SOLID', with 100% opacity
