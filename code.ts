@@ -53,6 +53,10 @@ function rgb2lab(rgb: RGB){
 }
 
 async function main(): Promise<string> {
+  if (figma.currentPage.selection.length === 0) {
+    return "Please first select the nodes then run the plugin"
+  }
+
   const stylesToMatch = figma.
     getLocalPaintStyles().
     filter((paintStyle: PaintStyle) => (
@@ -61,8 +65,8 @@ async function main(): Promise<string> {
       paintStyle.paints[0].opacity === 1
     ))
 
-  if (figma.currentPage.selection.length === 0) {
-    return "Please first select the nodes then run the plugin"
+  if (stylesToMatch.length === 0) {
+    return "Please create local solid paint styles then run the plugin"
   }
 
   let numApplied = 0
