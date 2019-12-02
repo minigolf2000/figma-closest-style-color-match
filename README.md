@@ -1,4 +1,9 @@
-Batch convert all selected fills to paints found in local styles, choosing the closest style by color difference
+Match fills to local styles
 
-Uses Delta E to calculate color difference
+Converts every selected solid fill to a color in Local Color Styles, choosing the closest Local Color Style by Delta E color difference
+
+Delta E color difference
 https://en.wikipedia.org/wiki/Color_difference
+
+- Works only with solid fills, no gradients
+- Works only with local styles

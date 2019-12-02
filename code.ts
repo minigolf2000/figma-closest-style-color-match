@@ -69,20 +69,29 @@ async function main(): Promise<string> {
     return "Please create local solid paint styles then run the plugin"
   }
 
-  let numApplied = 0
-  figma.currentPage.selection.forEach((node: SceneNode) => {
-    if ('fills' in node) {
-      for (const paint of (node as any).fills) {
-        if (paint.type === 'SOLID') {
-          const closestStyle = findClosestStyle(paint.color as RGB, stylesToMatch)
-          node.fillStyleId = closestStyle.id
-          numApplied++
-        }
+  const numApplied = recurse({children: figma.currentPage.selection}, stylesToMatch, 0)
+
+  return `Applied styles to ${numApplied} nodes in selection`
+}
+
+function recurse(node: any, stylesToMatch: PaintStyle[], numApplied: number) {
+  if ('children' in node) {
+    node.children.forEach((child: any) => {
+      numApplied += recurse(child, stylesToMatch, 0)
+    })
+  }
+
+  if (node.fills && node.fills.length > 0) {
+    for (const paint of node.fills) {
+      if (paint.type === 'SOLID') {
+        const closestStyle = findClosestStyle(paint.color as RGB, stylesToMatch)
+        node.fillStyleId = closestStyle.id
+        numApplied++
       }
     }
-  })
+  }
 
-  return `Applied styles to ${numApplied} of ${figma.currentPage.selection.length} selected nodes`
+  return numApplied
 }
 
 main().then((message: string) => {
